@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>buzzer</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      .team {
+        display: block;
+        height: 100px;
+        width: 100px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #buzzer {
+        height: 400px;
+        width: 400px;
+        border-radius: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 40px;
+      }
+      .salmon {
+        background: linear-gradient(180deg, salmon, mediumpurple 600%);
+      }
+      .papayawhip {
+        background: linear-gradient(180deg, papayawhip, salmon 600%);
+      }
+      .aquamarine {
+        background: linear-gradient(180deg, aquamarine, goldenrod 600%);
+      }
+      .chartreuse {
+        background: linear-gradient(180deg, chartreuse, chocolate 600%);
+      }
+
+    </style>
+  </head>
+  <body>
+    <ul id="choices">
+      <li class="team salmon"><span>salmon</span></li>
+      <li class="team papayawhip"><span>papayawhip</span></li>
+      <li class="team aquamarine"><span>aquamarine</span></li>
+      <li class="team chartreuse"><span>chartreuse</span></li>
+    </ul>
+
+    <button style="display: none" class="buzzer" id="buzzer"><span>Buzz!!!</span></button>
+    <script>
+      (function () {
+        var socket = io();
+        var team = "";
+        var buzzer = document.getElementById('buzzer');
+        teams = document.getElementsByClassName('team');
+        for(i=0; i<teams.length; i++) {
+          var el = teams.item(i);
+          el.onclick = (function(e) {
+            team = e.srcElement.innerText;
+            buzzer.className = e.srcElement.innerText;
+            document.getElementById('choices').style.display = "none";
+            buzzer.style.display = "";
+          })
+        }
+
+        buzzer.onclick = function() {
+          socket.emit('team buzzed', team)
+          console.log(team)
+        }
+      })();
+    </script>
+  </body>
+</html>
